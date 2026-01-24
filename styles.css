@@ -17,6 +17,7 @@ h1{
  
 p1{
     color:white;
+    margin-top: 5px;
     font-family: sans-serif;
 }
 
@@ -30,10 +31,12 @@ p2{
 }
 
 .navigation{
+    font-family: sans-serif;
+    font-size: 14px;
     display:flex;
-    margin-top: 1em;
-    gap: 10px;
-    margin-bottom: 1em;
+    gap: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 #size-title{
@@ -44,8 +47,9 @@ p2{
     color:white;
 }
 
-.size{
-    width: 60px;
+.size{ /*size box*/
+    width: 37px;
+    border-color: rgb(255, 255, 255);
 }
 
 
@@ -95,45 +99,51 @@ p2{
 #col{
     width: 70px;
     height: 20px;
+    border-radius: 1px;
     margin-top: -30px;
     margin-bottom: -30px;
 }
 
 #empty{
     width: 30px;
-    height: 12px;
+    height: 20px;
 }
 
 .col1{
-    --color:rgb(0, 0, 0);
+    --color: #FFFFFF;
     background-color: var(--color);
 }
 
 .col2{
-    --color:rgb(0, 0, 0);
+    --color: #000000;
     background-color: var(--color);
 }
 .col3{
-    --color:rgb(0, 0, 0);
+    --color: #d41010;
     background-color: var(--color);
 }
 .col4{
-    --color:rgb(0, 0, 0);
+    --color: #2112ab;
     background-color: var(--color);
 }
 .col5{
-    --color:rgb(0, 0, 0);
+    --color:#e1e811;
     background-color: var(--color);
 }
 .col6{
-    --color:rgb(0, 0, 0);
+    --color:#04ba32;
     background-color: var(--color);
 }
 .col7{
-    --color:rgb(0, 0, 0);
+    --color:#e7740f;
     background-color: var(--color);
 }
 .col8{
-    --color:rgb(0, 0, 0);
+    --color:#b511e2;
+    background-color: var(--color);
+}
+
+.col9{
+    --color:#ea2f90;
     background-color: var(--color);
 }

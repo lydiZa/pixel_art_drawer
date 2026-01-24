@@ -31,6 +31,9 @@ const emp7 = document.querySelector('.emp7')
 const color8 = document.querySelector('.col8')
 const emp8 = document.querySelector('.emp8')
 
+const color9 = document.querySelector('.col9')
+const emp9 = document.querySelector('.emp9')
+
 //
 const pen_color= document.querySelector('.pen-color')
 const reset_button = document.querySelector('.reset')
@@ -40,13 +43,22 @@ const eraser_on = document.querySelector('.eraser')
 
 
 let line = "1px"
-let draw = false
+let draw = true
 let grid = true
 let erase= false
 let hold = false
 
 let empty_color = 'transparent'
 
+let col1 ="#FFFFFF"
+let col2 ="#000000"
+let col3 ="#d41010"
+let col4="#2112ab"
+let col5= "#e1e811"
+let col6= "#04ba32"
+let col7= "#e7740f"
+let col8 = "#b511e2"
+let col9 = "#ea2f90"
 
 
 
@@ -63,7 +75,78 @@ window.addEventListener("keydown",function(event){
             
         }
     }
+
+    if(event.key=="1"){
+        pen_color.value = col1
+
+    }
+    if(event.key=="2"){1
+        pen_color.value = col2
+    }11
+
+    if(event.key=="3"){
+        pen_color.value = col3
+    }
+        
+    if(event.key=="4"){
+        pen_color.value = col4
+    }
+
+    if(event.key=="5"){
+        pen_color.value = col5
+    }
+
+    if(event.key=="6"){
+        pen_color.value = col6
+    }
+    
+    if(event.key=="7"){
+        pen_color.value = col7
+    }
+    
+    if(event.key=="8"){
+        pen_color.value = col8
+    }
+    
+    if(event.key=="9"){
+        pen_color.value = col9
+    }
+    
+    
 })
+
+
+
+//palette change color by clicking color
+
+color1.addEventListener('click', function () {
+    pen_color.value = col1
+})
+color2.addEventListener('click', function () {
+    pen_color.value = col2
+})
+color3.addEventListener('click', function () {
+    pen_color.value = col3
+})
+color4.addEventListener('click', function () {
+    pen_color.value = col4
+})
+color5.addEventListener('click', function () {
+    pen_color.value = col5
+})
+color6.addEventListener('click', function () {
+    pen_color.value = col6
+})
+color7.addEventListener('click', function () {
+    pen_color.value = col7
+})
+color8.addEventListener('click', function () {
+    pen_color.value = col8
+})
+color9.addEventListener('click', function () {
+    pen_color.value = col9
+})
+
 
 
 window.addEventListener("mousedown",function(){
@@ -73,6 +156,7 @@ window.addEventListener("mousedown",function(){
 window.addEventListener("mouseup",function(){
     hold=false
 })
+
 
 
 
@@ -110,15 +194,6 @@ function increaseGrid(size){ //grid size and pen drawing
                     div.style.backgroundColor = empty_color
                 }
             }
-    
-            
-         
-    
-        
-
-        
-
-                
            
                   container.appendChild(div)
 
@@ -165,13 +240,15 @@ sizeIn.addEventListener('change',function(){
     reset()
 })
 
-let col1,col2,col3,col4,col5,col6,col7,col8
 
+
+//when clicking button, change property of color to pencolor
 
 emp1.addEventListener('click',function(){
     color1.style.setProperty('--color',pen_color.value)
     col1 = pen_color.value
 }) //color1
+
 emp2.addEventListener('click',function(){
     color2.style.setProperty('--color',pen_color.value)
     col2 = pen_color.value
@@ -206,31 +283,11 @@ emp8.addEventListener('click',function(){
     col8 = pen_color.value
 
 }) //color8
+emp9.addEventListener('click',function(){
+    color9.style.setProperty('--color',pen_color.value)
+    col9 = pen_color.value
 
-color1.addEventListener('click', function () {
-    pen_color.value = col1
-})
-color2.addEventListener('click', function () {
-    pen_color.value = col2
-})
-color3.addEventListener('click', function () {
-    pen_color.value = col3
-})
-color4.addEventListener('click', function () {
-    pen_color.value = col4
-})
-color5.addEventListener('click', function () {
-    pen_color.value = col5
-})
-color6.addEventListener('click', function () {
-    pen_color.value = col6
-})
-color7.addEventListener('click', function () {
-    pen_color.value = col7
-})
-color8.addEventListener('click', function () {
-    pen_color.value = col8
-})
+}) //color8
 
 
 
