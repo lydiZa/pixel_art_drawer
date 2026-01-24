@@ -7,6 +7,14 @@ const bkgdIn = document.querySelector('.bkgd-color')
 let bkgd = bkgdIn.value
 
 
+
+let undone = false
+let redo_clear = true 
+
+
+const undoIn = document.querySelector('.undo')
+const redoIn = document.querySelector('.redo')
+
 //palette
 const color1 = document.querySelector('.col1')
 const emp1 = document.querySelector('.emp1')
@@ -43,6 +51,17 @@ let pen_default = pen_color.value
 const eraser_on = document.querySelector('.eraser')
 
 
+
+let pixel_tracker = {'idx': 0}
+let undo_stack = []
+let redo_stack = []
+
+let recent_colors = []
+
+
+
+
+
 let line = "1px"
 let draw = true
 let grid = true
@@ -60,60 +79,6 @@ let col6= "#04ba32"
 let col7= "#e7740f"
 let col8 = "#b511e2"
 let col9 = "#ea2f90"
-
-
-
-window.addEventListener("keydown",function(event){
-    if(event.key=="e"){
-        if(erase==false){
-            container.style.setProperty('--cursor',"url('Eraser.cur'),default")
-            draw= false
-            erase = true
-        }else{
-            container.style.setProperty('--cursor',"url('Pencil.cur'),crosshair")
-            draw=true
-            erase=false
-        
-        }
-    }
-    if(event.key=="1"){
-        pen_color.value = col1
-
-    }
-    if(event.key=="2"){
-        pen_color.value = col2
-    }
-
-    if(event.key=="3"){
-        pen_color.value = col3
-    }
-        
-    if(event.key=="4"){
-        pen_color.value = col4
-    }
-
-    if(event.key=="5"){
-        pen_color.value = col5
-    }
-
-    if(event.key=="6"){
-        pen_color.value = col6
-    }
-    
-    if(event.key=="7"){
-        pen_color.value = col7
-    }
-    
-    if(event.key=="8"){
-        pen_color.value = col8
-    }
-    
-    if(event.key=="9"){
-        pen_color.value = col9
-    }
-    
-    
-})
 
 
 
@@ -159,6 +124,9 @@ window.addEventListener("mouseup",function(){
 
 
 
+let transparent = false
+let on_color 
+
 function increaseGrid(size){ //grid size and pen drawing
     if(size>128){
         window.alert("Size only up to 128x128!")
@@ -167,42 +135,79 @@ function increaseGrid(size){ //grid size and pen drawing
     container.style.setProperty('--size',size)
     for(let i=1;i<=size*size;i++){
         const div= document.createElement('div')
-        div.classList.add('pixel')
+        div.classList.add('pixel' + i)
 
             div.onmousedown = function(){
-                if(hold) return //if hold is on a
+                if(hold) return //if hold is on 
                 if(draw){
+                    transparent =false
+                    redo_clear = true
                     div.style.backgroundColor = pen_color.value
-                    // if(!(i in pixel_grid)){
-                    //     pixel_grid['idx'] = i
-                    //     console.log(pixel_grid)
-                    // }
-                    
+                    pixel_tracker['idx'] = i
+                    undo_stack.push(div)
+
                 }
                 if(erase){
+                    transparent =true
                     div.style.backgroundColor = empty_color
+                    undo_stack.push(div)
+                    on_color = pen_color.value
+      
                 }
+
+                //    if(erase){
+                //     div.style.backgroundColor = empty_color
+                //     redo_stack.push(div)
+                //     console.log(redo_stack)
+                //     recent_colors.push(pen_color.value)
+                //     console.log(recent_colors)
+      
+                // }
+                
             }
 
             div.onmousemove = function(){
                 if(!hold) return //if hold is off
                 if(draw){
+                    transparent =false
+                    redo_clear = true
                     div.style.backgroundColor = pen_color.value
-                    // if(!(i in pixel_grid)){
-                    //     pixel_grid['idx'] = i
-                    //     console.log(pixel_grid)
-                    // }
+                    pixel_tracker['idx'] = i
+                    undo_stack.push(div)
+
                 }
-                if(erase){
+                // if(erase){
+                //     div.style.backgroundColor = empty_color
+
+                //     redo_stack.push(div)     
+                //     console.log(redo_stack)
+                //     recent_colors.push(pen_color.value)
+                //     console.log(recent_colors)
+
+
+                // }
+                  if(erase){
+                    transparent =true
                     div.style.backgroundColor = empty_color
+                    undo_stack.push(div)
+                    on_color = pen_color.value
+
+
                 }
+
             }
+
+            
            
                   container.appendChild(div)
 
     }   
 
 }
+
+
+
+
 
 
 //show grid
@@ -221,11 +226,14 @@ function showGrid(){
 
 
 
-
-
 function reset(){
     container.innerHTML =""
     increaseGrid(size)
+    while(redo_stack.length>0 || undo_stack.length>0 || recent_colors.length>0){
+        redo_stack.pop()
+        undo_stack.pop()
+        recent_colors.pop()
+    }
 }
 
 bkgdIn.addEventListener("change",function(){
@@ -306,3 +314,130 @@ bkgd_toggle.addEventListener('click',function(){
 })
 
 increaseGrid(size)
+
+
+window.addEventListener("keydown",function(event){
+    if(event.key=="e"){
+        if(erase==false){
+            container.style.setProperty('--cursor',"url('Eraser.cur'),default")
+            draw= false
+            erase = true
+        }else{
+            container.style.setProperty('--cursor',"url('Pencil.cur'),crosshair")
+            draw=true
+            erase=false
+        
+        }
+    }
+
+    if(event.key=="1"){
+        pen_color.value = col1
+
+    }
+    if(event.key=="2"){
+        pen_color.value = col2
+    }
+
+    if(event.key=="3"){
+        pen_color.value = col3
+    }
+        
+    if(event.key=="4"){
+        pen_color.value = col4
+    }
+
+    if(event.key=="5"){
+        pen_color.value = col5
+    }
+
+    if(event.key=="6"){
+        pen_color.value = col6
+    }
+    
+    if(event.key=="7"){
+        pen_color.value = col7
+    }
+    
+    if(event.key=="8"){
+        pen_color.value = col8
+    }
+    
+    if(event.key=="9"){
+        pen_color.value = col9
+    }
+
+    
+    let curr_color
+    let curr_color2
+    let curr_color3
+    // if(event.key=="z" && undo_stack.length>0){
+    //         curr_color = window.getComputedStyle(undo_stack[undo_stack.length-1]).getPropertyValue('background-color')
+    //         // console.log(curr_color)
+           
+    //         recent_colors.push(curr_color)
+
+            
+    //         undo_stack[undo_stack.length-1].style.backgroundColor = empty_color //undo color
+    //         redo_stack.push(undo_stack.pop())
+    // }
+
+     if(event.key=="z" && undo_stack.length>0){
+         
+            while(redo_clear == true && redo_stack.length>0){
+                redo_stack.pop()   
+            }
+           redo_clear= false
+            
+            curr_color = window.getComputedStyle(undo_stack[undo_stack.length-1]).getPropertyValue('background-color')
+            // console.log(curr_color)
+            if(transparent!=true){
+                recent_colors.push(curr_color)
+                undo_stack[undo_stack.length-1].style.backgroundColor = empty_color //undo color
+                redo_stack.push(undo_stack.pop())
+            }else{
+                recent_colors.push(empty_color)
+                undo_stack[undo_stack.length-1].style.backgroundColor = on_color 
+                redo_stack.push(undo_stack.pop())
+            }
+            
+       
+        
+    }
+
+    if(event.key=="r" && redo_stack.length>0){ 
+        
+        // console.log(recent_colors)
+        // console.log(redo_stack)
+
+        
+            while(redo_clear == true && redo_stack.length>0){
+                    redo_stack.pop()   
+            }
+           redo_clear= false
+
+            redo_stack[redo_stack.length-1].style.setProperty('background-color',recent_colors[recent_colors.length-1])
+            undo_stack.push(redo_stack.pop())
+            recent_colors.pop()
+      
+       
+        // console.log(recent_colors)
+        // console.log(redo_stack)
+        // console.log(undo_stack)
+
+    }
+
+    //  if(event.key=="r" && redo_stack.length>0){ 
+        
+    //     // console.log(recent_colors)
+    //     // console.log(redo_stack)
+
+    //     redo_stack[redo_stack.length-1].style.setProperty('background-color',recent_colors[recent_colors.length-1])
+    //     undo_stack.push(redo_stack.pop())
+    //     recent_colors.pop()
+    //     console.log(recent_colors)
+    //     console.log(redo_stack)
+    //     console.log(undo_stack)
+
+    // }
+})
+

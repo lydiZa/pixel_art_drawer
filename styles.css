@@ -66,7 +66,8 @@ p2{
 }
 
 .pixel{
-    background-color: transparent;
+    --background: black;
+    background-color: var(--background);
 } 
 
 .pixel:hover{
