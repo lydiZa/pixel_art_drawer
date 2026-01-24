@@ -1,0 +1,139 @@
+body{
+    background:linear-gradient(black, rgb(88, 86, 86));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 5px;
+}
+
+#background{ 
+    /* backgroundbutton */
+    color: white;
+}
+
+h1{
+    color:rgb(255, 255, 255);
+    font-family:sans-serif;
+}
+ 
+p1{
+    color:white;
+    font-family: sans-serif;
+}
+
+p2{
+    color: white;
+    font-style: italic;
+}
+.navigation,.container{
+    background-color: rgb(0, 0, 0);
+    width: 600px;
+}
+
+.navigation{
+    display:flex;
+    margin-top: 1em;
+    gap: 10px;
+    margin-bottom: 1em;
+}
+
+#size-title{
+    color:white;
+}
+
+#pen{
+    color:white;
+}
+
+.size{
+    width: 60px;
+}
+
+
+.container{
+    --cursor: default;
+    --size: 16;
+    --line: 1px;
+    --background : rgb(255, 255, 255);
+    background-color: var(--background);
+    cursor: var(--cursor);
+    height:500px;
+    display: grid;
+    grid-template-columns:repeat(var(--size),1fr);
+    grid-template-rows:repeat(var(--size),1fr);
+    gap: var(--line);
+    padding:3px;
+
+}
+
+.pixel{
+    background-color: transparent;
+} 
+
+.pixel:hover{
+    background-color: rgba(122, 122, 224, 0.159);
+}
+
+#save{
+    margin-top: 5px;
+    margin-left: 560px;
+}
+
+.grid{ 
+/*  grid button */
+    background-color: white; 
+}
+
+#panel{
+    display:grid;
+    grid-template-columns:repeat(1,1fr);
+    grid-template-rows:repeat(8,1fr);
+    margin-left: 620px;
+    gap:5px;
+    margin-top:-530px;
+}
+
+#col{
+    width: 70px;
+    height: 20px;
+    margin-top: -30px;
+    margin-bottom: -30px;
+}
+
+#empty{
+    width: 30px;
+    height: 12px;
+}
+
+.col1{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}
+
+.col2{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}
+.col3{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}
+.col4{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}
+.col5{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}
+.col6{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}
+.col7{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}
+.col8{
+    --color:rgb(0, 0, 0);
+    background-color: var(--color);
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width"/>
+        <title>Pixel Drawing App</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <h1>Pixel Drawer</h1>
+        <p1>Create pixel art!</p1>
+        <p2>Press E to switch between pen and eraser!</p2>
+
+        <div class="navigation">
+            <div id="size-title">Canva Size<input type="number" value="16" class="size">
+</div>
+            <div id="pen">Color<input type="color" value="#000000" class="pen-color">
+            </div>
+
+
+            <div id="background">Background<input type="color" value="#FFFFFF" class="bkgd-color"></div>
+
+            <button class="reset">Clear Canvas</button>
+            <button class="grid">Grid (On/Off)</button>
+            <!-- <button class="background">Opacity</button> -->
+        </div>
+
+
+        <div id="container" class="container">
+          
+        </div>
+        <button id="save">Save</button>
+        <div id="panel">
+            <div id="pal" class="pal1"><button id="col" class="col1"></button><button id="empty" class="emp1"></button></div>
+            <div id="pal" class="pal2"><button id="col" class="col2"></button><button id="empty" class="emp2"></button></div>
+             <div id="pal" class="pal3"><button id="col" class="col3"></button><button id="empty" class="emp3"></button></div>
+            <div id="pal"class="pal4"><button id="col" class="col4"></button><button id="empty" class="emp4"></button></div>
+            <div id="pal" class="pal5"><button id="col" class="col5"></button><button id="empty" class="emp5"></button></div>
+            <div id="pal" class="pal6"><button id="col" class="col6"></button><button id="empty" class="emp6"></button></div>
+            <div id="pal" class="pal7"><button id="col" class="col7"></button><button id="empty" class="emp7"></button></div>
+            <div id="pal" class="pal8"><button id="col" class="col8"></button><button id="empty" class="emp8"></button></div>
+
+
+
+
+
+
+        </div>
+
+
+        <script src="main.js"></script>     
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+        <script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
+       
+        <script>
+            $(document).ready(function(){
+                $("#save").click(function(){
+                    domtoimage.toBlob(document.getElementById('container'))
+                    .then(function(blob){
+                        window.saveAs(blob, "output.png")
+                    })
+                })
+            })
+        </script>
+    </body>
+</html>
