@@ -5,10 +5,6 @@ body{
     margin: 5px;
 }
 
-#background{ 
-    /* backgroundbutton */
-    color: white;
-}
 
 h1{
     color:rgb(255, 255, 255);
@@ -54,7 +50,7 @@ p2{
 
 
 .container{
-    --cursor: default;
+    --cursor: url("Pencil.cur"),default;
     --size: 16;
     --line: 1px;
     --background : rgb(255, 255, 255);

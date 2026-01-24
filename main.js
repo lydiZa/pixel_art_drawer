@@ -1,6 +1,7 @@
 const container=document.querySelector('.container')
 const sizeIn = document.querySelector('.size')
 let size = sizeIn.value
+const bkgd_toggle = document.getElementById('background') 
 
 const bkgdIn = document.querySelector('.bkgd-color')
 let bkgd = bkgdIn.value
@@ -65,24 +66,23 @@ let col9 = "#ea2f90"
 window.addEventListener("keydown",function(event){
     if(event.key=="e"){
         if(erase==false){
-            container.style.setProperty('--cursor',"default")
+            container.style.setProperty('--cursor',"url('Eraser.cur'),default")
             draw= false
             erase = true
         }else{
-            container.style.setProperty('--cursor',"crosshair")
+            container.style.setProperty('--cursor',"url('Pencil.cur'),crosshair")
             draw=true
             erase=false
-            
+        
         }
     }
-
     if(event.key=="1"){
         pen_color.value = col1
 
     }
-    if(event.key=="2"){1
+    if(event.key=="2"){
         pen_color.value = col2
-    }11
+    }
 
     if(event.key=="3"){
         pen_color.value = col3
@@ -159,26 +159,25 @@ window.addEventListener("mouseup",function(){
 
 
 
-
-
-
-
 function increaseGrid(size){ //grid size and pen drawing
     if(size>128){
         window.alert("Size only up to 128x128!")
         size=32
     }
     container.style.setProperty('--size',size)
-    for(let i=0;i<size*size;i++){
+    for(let i=1;i<=size*size;i++){
         const div= document.createElement('div')
         div.classList.add('pixel')
-    
-      
 
             div.onmousedown = function(){
                 if(hold) return //if hold is on a
                 if(draw){
                     div.style.backgroundColor = pen_color.value
+                    // if(!(i in pixel_grid)){
+                    //     pixel_grid['idx'] = i
+                    //     console.log(pixel_grid)
+                    // }
+                    
                 }
                 if(erase){
                     div.style.backgroundColor = empty_color
@@ -189,6 +188,10 @@ function increaseGrid(size){ //grid size and pen drawing
                 if(!hold) return //if hold is off
                 if(draw){
                     div.style.backgroundColor = pen_color.value
+                    // if(!(i in pixel_grid)){
+                    //     pixel_grid['idx'] = i
+                    //     console.log(pixel_grid)
+                    // }
                 }
                 if(erase){
                     div.style.backgroundColor = empty_color
@@ -289,8 +292,17 @@ emp9.addEventListener('click',function(){
 
 }) //color8
 
+//background toggle
+let bkgd_on = true
 
-
+bkgd_toggle.addEventListener('click',function(){
+    if(bkgd_on==true){
+        container.style.setProperty('--background',empty_color)
+        bkgd_on= false
+    }else{
+        container.style.setProperty('--background',bkgd)
+        bkgd_on= true       
+    }
+})
 
 increaseGrid(size)
-
