@@ -83,7 +83,7 @@ p2{
     background-color: rgba(122, 122, 224, 0.159);
 }
 
-#save{
+.save{
     margin-top: 5px;
     margin-left: 420px;
 }
@@ -152,4 +152,26 @@ p2{
 .col9{
     --color:#ea2f90;
     background-color: var(--color);
+}
+
+
+#pal{
+    
+    display:grid;
+    grid-template-columns:repeat(1,1fr);
+    grid-template-rows:repeat(8,1fr);
+    gap:2px;
+
+}
+
+#empty{
+
+    margin-left: 700px;  
+    margin-top: -800px;
+}
+
+#showcase{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    grid-template-rows:repeat(1,1fr);
 }

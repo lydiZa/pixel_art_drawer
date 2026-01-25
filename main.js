@@ -1,7 +1,10 @@
 const container=document.querySelector('.container')
 const sizeIn = document.querySelector('.size')
 let size = sizeIn.value
-const bkgd_toggle = document.getElementById('background') 
+
+const bkgd_toggle = document.querySelector('.background') 
+
+
 
 const bkgdIn = document.querySelector('.bkgd-color')
 let bkgd = bkgdIn.value
@@ -204,6 +207,7 @@ function increaseGrid(size){ //grid size and pen drawing
                 
             }
 
+          
 
             div.onmousemove = function(){
                 if(!hold) return //if hold is off
@@ -551,6 +555,7 @@ window.addEventListener("keydown",function(event){
     }
 
 
-
 })
+
+
 
