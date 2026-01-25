@@ -2,11 +2,11 @@ body{
     background:linear-gradient(black, rgb(88, 86, 86));
     background-repeat: no-repeat;
     background-attachment: fixed;
-    margin: 5px;
+    padding:10px;
 }
 
 
-h1{
+h1,h2{
     color:rgb(255, 255, 255);
     font-family:sans-serif;
 }
@@ -49,6 +49,9 @@ p2{
 }
 
 
+.brush-size{
+    width:35px;
+}
 .container{
     --cursor: url("Pencil.cur"),default;
     --size: 16;
@@ -64,9 +67,15 @@ p2{
     padding:3px;
 
 }
+#pixel-div{
+    --width: 1px;
+    --height: 1px;
+    width: var(--width);
+    height: var(--height);
+}
 
 .pixel{
-    --background: black;
+    --background: rgb(255, 255, 255);
     background-color: var(--background);
 } 
 
@@ -76,7 +85,7 @@ p2{
 
 #save{
     margin-top: 5px;
-    margin-left: 560px;
+    margin-left: 420px;
 }
 
 .grid{ 

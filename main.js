@@ -6,6 +6,8 @@ const bkgd_toggle = document.getElementById('background')
 const bkgdIn = document.querySelector('.bkgd-color')
 let bkgd = bkgdIn.value
 
+// const brushSizeIn = document.querySelector('.brush-size')
+// let brush = brushSizeIn.value
 
 
 let undone = false
@@ -61,6 +63,10 @@ let recent_colors = []
 
 
 
+let horizontal_line = false
+let vertical_line = false
+let rDiagonal = false
+let lDiagonal = false
 
 let line = "1px"
 let draw = true
@@ -126,6 +132,7 @@ window.addEventListener("mouseup",function(){
 
 let transparent = false
 let on_color 
+let name_class
 
 function increaseGrid(size){ //grid size and pen drawing
     if(size>128){
@@ -133,20 +140,59 @@ function increaseGrid(size){ //grid size and pen drawing
         size=32
     }
     container.style.setProperty('--size',size)
-    for(let i=1;i<=size*size;i++){
-        const div= document.createElement('div')
-        div.classList.add('pixel' + i)
+
+    for(let i=1;i<=size;i++){
+        for(let j=1;j<=size;j++){
+
+
+            const div= document.createElement('div')
+
+            div.id = i //row id name
+            div.classList.add(j) //col class name
+
+            console.log(div)
+        
+            
+            
 
             div.onmousedown = function(){
                 if(hold) return //if hold is on 
                 if(draw){
                     transparent =false
                     redo_clear = true
-                    div.style.backgroundColor = pen_color.value
-                    pixel_tracker['idx'] = i
+                    let curr_color = pen_color.value
+                    div.style.backgroundColor = curr_color
+
+                    
+                   
                     undo_stack.push(div)
 
-                }
+
+            
+                    //  $("div#" + x1 + "." + y1).prevUntil($("div#" + x2 + "." + y2)).css("background-color", curr_color).each(function(){
+                    //         undo_stack.push(this)
+                    //     })
+                    //     $("div#" + x3 + "." + y3).prevUntil($("div#" + x4 + "." + y4)).css("background-color", curr_color).each(function(){
+                    //         undo_stack.push(this)
+                    //     })
+                    
+             
+
+             
+
+                 
+
+                  
+                    
+
+
+                    
+
+ 
+                   
+                    
+            }
+
                 if(erase){
                     transparent =true
                     div.style.backgroundColor = empty_color
@@ -155,37 +201,59 @@ function increaseGrid(size){ //grid size and pen drawing
       
                 }
 
-                //    if(erase){
-                //     div.style.backgroundColor = empty_color
-                //     redo_stack.push(div)
-                //     console.log(redo_stack)
-                //     recent_colors.push(pen_color.value)
-                //     console.log(recent_colors)
-      
-                // }
                 
             }
+
 
             div.onmousemove = function(){
                 if(!hold) return //if hold is off
                 if(draw){
                     transparent =false
                     redo_clear = true
-                    div.style.backgroundColor = pen_color.value
-                    pixel_tracker['idx'] = i
+                    curr_color = pen_color.value
+                    div.style.backgroundColor = curr_color
                     undo_stack.push(div)
+ 
+                     if(horizontal_line==true){
+                        // straight line (horizontal)
+                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                            j+=1
+                            undo_stack.push(this)
+                        })
+                    }
+
+
+                    if(rDiagonal ==true){
+                             // diagonal(right /)
+                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                            j--
+                            i++
+                            undo_stack.push(this)
+
+                        })
+                    }
+                    if(lDiagonal==true){
+                           //diagonal(left\)
+                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                            j++
+                            i++
+                            undo_stack.push(this)
+
+                        })
+                    }
+
+                    if(vertical_line==true){ 
+                    // straight line (vertical)
+                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                                i+=1
+                                undo_stack.push(this)
+                        })
+                    }
 
                 }
-                // if(erase){
-                //     div.style.backgroundColor = empty_color
-
-                //     redo_stack.push(div)     
-                //     console.log(redo_stack)
-                //     recent_colors.push(pen_color.value)
-                //     console.log(recent_colors)
+               
 
 
-                // }
                   if(erase){
                     transparent =true
                     div.style.backgroundColor = empty_color
@@ -202,9 +270,8 @@ function increaseGrid(size){ //grid size and pen drawing
                   container.appendChild(div)
 
     }   
-
+    }
 }
-
 
 
 
@@ -250,6 +317,12 @@ sizeIn.addEventListener('change',function(){
     size = sizeIn.value
     reset()
 })
+
+
+// brushSizeIn.addEventListener('change',function(){
+//     brush = brushSizeIn.value
+//     console.log(brush)
+// })
 
 
 
@@ -318,6 +391,10 @@ increaseGrid(size)
 
 window.addEventListener("keydown",function(event){
     if(event.key=="e"){
+        rDiagonal=false
+        lDiagonal=false
+        horizontal_line=false
+        vertical_line=false
         if(erase==false){
             container.style.setProperty('--cursor',"url('Eraser.cur'),default")
             draw= false
@@ -328,6 +405,71 @@ window.addEventListener("keydown",function(event){
             erase=false
         
         }
+    }
+
+
+    
+     if(event.key=="h"){ 
+        erase=false
+        draw =true
+        rDiagonal=false
+        vertical_line=false
+        lDiagonal=false
+       if(horizontal_line==false){
+        container.style.setProperty('--cursor',"url('horizontal.cur'),default")
+
+        horizontal_line = true
+       }else{
+        horizontal_line=false
+       }
+    }
+
+     if(event.key=="v"){ 
+        erase=false
+        draw =true
+        horizontal_line=false
+        rDiagonal=false
+        lDiagonal=false
+       if(vertical_line==false){
+        container.style.setProperty('--cursor',"url('vertical.cur'),default")
+
+        vertical_line = true
+       }else{
+        vertical_line=false
+       }
+    }
+
+
+    
+     if(event.key=="m"){ 
+        erase=false
+        draw =true
+        vertical_line=false
+        lDiagonal=false
+        horizontal_line=false
+       if(rDiagonal==false){        
+        container.style.setProperty('--cursor',"url('Diagonal2.cur'),default")
+
+        rDiagonal = true
+       }else{
+        rDiagonal=false
+       }
+    }
+
+     if(event.key=="n"){ 
+        erase=false
+        draw =true        
+        vertical_line=false
+        horizontal_line=false
+        rDiagonal=false
+       if(lDiagonal==false){        
+        container.style.setProperty('--cursor',"url('Diagonal1.cur'),default")
+
+
+        lDiagonal = true
+       }else{
+        lDiagonal=false
+       }
     }
 
     if(event.key=="1"){
@@ -368,18 +510,8 @@ window.addEventListener("keydown",function(event){
 
     
     let curr_color
-    let curr_color2
-    let curr_color3
-    // if(event.key=="z" && undo_stack.length>0){
-    //         curr_color = window.getComputedStyle(undo_stack[undo_stack.length-1]).getPropertyValue('background-color')
-    //         // console.log(curr_color)
-           
-    //         recent_colors.push(curr_color)
 
-            
-    //         undo_stack[undo_stack.length-1].style.backgroundColor = empty_color //undo color
-    //         redo_stack.push(undo_stack.pop())
-    // }
+  
 
      if(event.key=="z" && undo_stack.length>0){
          
@@ -405,10 +537,7 @@ window.addEventListener("keydown",function(event){
     }
 
     if(event.key=="r" && redo_stack.length>0){ 
-        
-        // console.log(recent_colors)
-        // console.log(redo_stack)
-
+       
         
             while(redo_clear == true && redo_stack.length>0){
                     redo_stack.pop()   
@@ -418,26 +547,10 @@ window.addEventListener("keydown",function(event){
             redo_stack[redo_stack.length-1].style.setProperty('background-color',recent_colors[recent_colors.length-1])
             undo_stack.push(redo_stack.pop())
             recent_colors.pop()
-      
-       
-        // console.log(recent_colors)
-        // console.log(redo_stack)
-        // console.log(undo_stack)
 
     }
 
-    //  if(event.key=="r" && redo_stack.length>0){ 
-        
-    //     // console.log(recent_colors)
-    //     // console.log(redo_stack)
 
-    //     redo_stack[redo_stack.length-1].style.setProperty('background-color',recent_colors[recent_colors.length-1])
-    //     undo_stack.push(redo_stack.pop())
-    //     recent_colors.pop()
-    //     console.log(recent_colors)
-    //     console.log(redo_stack)
-    //     console.log(undo_stack)
 
-    // }
 })
 
