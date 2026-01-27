@@ -2,6 +2,7 @@ const container=document.querySelector('.container')
 const sizeIn = document.querySelector('.size')
 let size = sizeIn.value
 
+let drag_count = 0
 const bkgd_toggle = document.querySelector('.background') 
 
 
@@ -218,41 +219,45 @@ function increaseGrid(size){ //grid size and pen drawing
                     div.style.backgroundColor = curr_color
                     undo_stack.push(div)
  
-                     if(horizontal_line==true){
-                        // straight line (horizontal)
-                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                            j+=1
-                            undo_stack.push(this)
-                        })
-                    }
 
 
-                    if(rDiagonal ==true){
-                             // diagonal(right /)
-                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                            j--
-                            i++
-                            undo_stack.push(this)
 
-                        })
-                    }
-                    if(lDiagonal==true){
-                           //diagonal(left\)
-                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                            j++
-                            i++
-                            undo_stack.push(this)
 
-                        })
-                    }
+                    // if(horizontal_line==true){
+                    //     // straight line (horizontal)
+                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                    //         j+=1
+                    //         undo_stack.push(this)
+                    //     })
+                    // }
 
-                    if(vertical_line==true){ 
-                    // straight line (vertical)
-                        $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                                i+=1
-                                undo_stack.push(this)
-                        })
-                    }
+
+                    // if(rDiagonal ==true){
+                    //          // diagonal(right /)
+                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                    //         j--
+                    //         i++
+                    //         undo_stack.push(this)
+
+                    //     })
+                    // }
+                    // if(lDiagonal==true){
+                    //        //diagonal(left\)
+                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                    //         j++
+                    //         i++
+                    //         undo_stack.push(this)
+
+                    //     })
+                    // }
+
+                    // if(vertical_line==true){ 
+                    // // straight line (vertical)
+                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
+                    //             i+=1
+                    //             undo_stack.push(this)
+                    //     })
+                    // }
 
                 }
                
