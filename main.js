@@ -2,16 +2,17 @@ const container=document.querySelector('.container')
 const sizeIn = document.querySelector('.size')
 let size = sizeIn.value
 
-let drag_count = 0
+let undo_count = 0
+let redo_count = 0
 const bkgd_toggle = document.querySelector('.background') 
 
-
+//create grid by making another div in form of container 
 
 const bkgdIn = document.querySelector('.bkgd-color')
 let bkgd = bkgdIn.value
 
-// const brushSizeIn = document.querySelector('.brush-size')
-// let brush = brushSizeIn.value
+const brushSizeIn = document.querySelector('.brush-size')
+let brush = brushSizeIn.value
 
 
 let undone = false
@@ -91,8 +92,7 @@ let col8 = "#b511e2"
 let col9 = "#ea2f90"
 
 
-
-//palette change color by clicking color
+//palette change color by clicking button
 
 color1.addEventListener('click', function () {
     pen_color.value = col1
@@ -121,6 +121,7 @@ color8.addEventListener('click', function () {
 color9.addEventListener('click', function () {
     pen_color.value = col9
 })
+
 
 
 
@@ -167,7 +168,7 @@ function increaseGrid(size){ //grid size and pen drawing
                     let curr_color = pen_color.value
                     div.style.backgroundColor = curr_color
 
-                    
+                    undo_count++;
                    
                     undo_stack.push(div)
 
@@ -181,18 +182,6 @@ function increaseGrid(size){ //grid size and pen drawing
                     //     })
                     
              
-
-             
-
-                 
-
-                  
-                    
-
-
-                    
-
- 
                    
                     
             }
@@ -213,6 +202,7 @@ function increaseGrid(size){ //grid size and pen drawing
             div.onmousemove = function(){
                 if(!hold) return //if hold is off
                 if(draw){
+                    undo_count++
                     transparent =false
                     redo_clear = true
                     curr_color = pen_color.value
@@ -301,7 +291,6 @@ function showGrid(){
 }
 
 
-
 function reset(){
     container.innerHTML =""
     increaseGrid(size)
@@ -334,8 +323,6 @@ sizeIn.addEventListener('change',function(){
 // })
 
 
-
-//when clicking button, change property of color to pencolor
 
 emp1.addEventListener('click',function(){
     color1.style.setProperty('--color',pen_color.value)
@@ -380,7 +367,7 @@ emp9.addEventListener('click',function(){
     color9.style.setProperty('--color',pen_color.value)
     col9 = pen_color.value
 
-}) //color8
+}) //color9
 
 //background toggle
 let bkgd_on = true
@@ -520,30 +507,36 @@ window.addEventListener("keydown",function(event){
     
     let curr_color
 
-  
+  //undo
 
      if(event.key=="z" && undo_stack.length>0){
          
             while(redo_clear == true && redo_stack.length>0){
+                undo_count=0
                 redo_stack.pop()   
             }
            redo_clear= false
             
             curr_color = window.getComputedStyle(undo_stack[undo_stack.length-1]).getPropertyValue('background-color')
             // console.log(curr_color)
-            if(transparent!=true){
-                recent_colors.push(curr_color)
-                undo_stack[undo_stack.length-1].style.backgroundColor = empty_color //undo color
-                redo_stack.push(undo_stack.pop())
+            if(transparent!=true){ 
+                for(let i=0;i<drag_count;i++){
+                    recent_colors.push(curr_color)
+                    undo_stack[undo_stack.length-1].style.backgroundColor = empty_color //undo color
+                    redo_stack.push(undo_stack.pop())
+                }
             }else{
                 recent_colors.push(empty_color)
                 undo_stack[undo_stack.length-1].style.backgroundColor = on_color 
                 redo_stack.push(undo_stack.pop())
+                redo_count++
             }
             
        
         
     }
+
+    //redo
 
     if(event.key=="r" && redo_stack.length>0){ 
        
@@ -561,6 +554,5 @@ window.addEventListener("keydown",function(event){
 
 
 })
-
 
 

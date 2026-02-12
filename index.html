@@ -4,8 +4,10 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width"/>
         <title>Pixel Drawing App</title>
+
         <link rel="stylesheet" href="styles.css">
         <script src="https://code.jquery.com"></script>
+
 
     </head>
     <body>
@@ -33,9 +35,9 @@
 
         </div>
         <div class="navigation">
-            <p1>Canva Size</p1><input type="number" value="16" class="size">
-            <p1>Color</p1><input type="color" class="pen-color">
-            <p1>Background</p1><input type="color" value="#FFFFFF" class="bkgd-color">
+            <p1>Canva Size</p1><input type="number" value="16" class="size" name="size">
+            <p1>Color</p1><input type="color" class= "pen-color" name="pen-color">
+            <p1>Background</p1><input type="color" value="#FFFFFF" class="bkgd-color" name="bkgd-color">
             <p1>Brush Size</p1><select class="brush-size" name="brush-size">
                 <option value ="small">Small</option>
                 <option value ="med">Medium</option>
@@ -53,20 +55,20 @@
           
         </div>
 
-        <button class="background">Background (On/Off)</button>
-        <button class="save">Save</button>
 
         <div id="panel">
             <div id="pal" class="pal1"><button id="col" class="col1"></button></div>
             <div id="pal" class="pal2"><button id="col" class="col2"></button></div>
-             <div id="pal" class="pal3"><button id="col" class="col3"></button></div>
+            <div id="pal" class="pal3"><button id="col" class="col3"></button></div>
             <div id="pal" class="pal4"><button id="col" class="col4"></button></div>
             <div id="pal" class="pal5"><button id="col" class="col5"></button></div>
             <div id="pal" class="pal6"><button id="col" class="col6"></button></div>
             <div id="pal" class="pal7"><button id="col" class="col7"></button></div>
             <div id="pal" class="pal8"><button id="col" class="col8"></button></div>
             <div id="pal" class="pal9"><button id="col" class="col9"></button></div>
+            </div>
         </div>
+        <br>
         <button id="empty" class="emp1"></button>
         <button id="empty" class="emp2"></button>
         <button id="empty" class="emp3"></button>
@@ -76,25 +78,18 @@
         <button id="empty" class="emp7"></button>
         <button id="empty" class="emp8"></button>
         <button id="empty" class="emp9"></button>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
-
-
-
-            <div id="showcase"></div>
+<br>
+      
+            <div id= "bottom-buttons">
             <button class="export">Export Palette</button>
+            <button class="background">Background (On/Off)</button>
+            <button class="save">Save</button>
 
+            </div>
+
+      
+
+               <div id="showcase" ></div>
 
 
         
@@ -109,22 +104,21 @@
  <script>
             
 
-            let node
-            for(let i=1;i<=8;i++){
-                node = document.querySelector('.pal'+i)
-                domtoimage.toPng(node)
-                    .then(function (dataUrl) {
+            // let node
+            // for(let i=1;i<=9;i++){
+            //     node = document.querySelector('.pal'+i)
+            //     domtoimage.toPng(node)
+            //         .then(function (dataUrl) {
 
-                        var img = new Image();
-                        img.src = dataUrl;
-                        document.getElementById('showcase').appendChild(img);
-                    })
-                    .catch(function (error) {
-                        console.error('oops, something went wrong!', error);
-                    });
-            }
+            //             var img = new Image();
+            //             img.src = dataUrl;
+            //             document.getElementById('showcase').appendChild(img);
+            //         })
+            //         .catch(function (error) {
+            //             console.error('oops, something went wrong!', error);
+            //         });
+            // }
 
-            console.log(document.getElementById('showcase'))
             
 
             $(document).ready(function(){
@@ -138,7 +132,7 @@
             })
            
             $(".export").click(function(){
-                domtoimage.toBlob(document.getElementById('showcase'))
+                domtoimage.toBlob(document.getElementById('panel'))
                 .then(function(blob){
                     window.saveAs(blob, "palette.png")
                 })
@@ -152,7 +146,9 @@
 
         </script>
 
-     
+
        
     </body>
+
+
 </html>
