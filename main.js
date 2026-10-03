@@ -1,28 +1,18 @@
+// Main drawing board container.
 const container=document.querySelector('.container')
+
+// The user can change the board size through this input.
 const sizeIn = document.querySelector('.size')
 let size = sizeIn.value
 
-let undo_count = 0
-let redo_count = 0
+// Toggle button for the canvas background visibility.
 const bkgd_toggle = document.querySelector('.background') 
 
-//create grid by making another div in form of container 
-
+// Background color picker for the canvas area.
 const bkgdIn = document.querySelector('.bkgd-color')
 let bkgd = bkgdIn.value
 
-const brushSizeIn = document.querySelector('.brush-size')
-let brush = brushSizeIn.value
-
-
-let undone = false
-let redo_clear = true 
-
-
-const undoIn = document.querySelector('.undo')
-const redoIn = document.querySelector('.redo')
-
-//palette
+// Palette references. Each color button stores a swatch for quick color selection.
 const color1 = document.querySelector('.col1')
 const emp1 = document.querySelector('.emp1')
 
@@ -50,35 +40,31 @@ const emp8 = document.querySelector('.emp8')
 const color9 = document.querySelector('.col9')
 const emp9 = document.querySelector('.emp9')
 
-//
+// Main drawing color input and global controls.
 const pen_color= document.querySelector('.pen-color')
 const reset_button = document.querySelector('.reset')
 const show_grid = document.querySelector('.grid')
-let pen_default = pen_color.value
-const eraser_on = document.querySelector('.eraser')
 
-
-
-let pixel_tracker = {'idx': 0}
+// History/state variables:
+// - current_stroke stores the cells changed during the current mouse drag.
+// - undo_stack stores completed strokes that can be undone.
+// - redo_stack stores undone strokes that can be redone.
+// - cellStateMap keeps the current color of each grid cell so undo/redo can restore the correct state.
+let current_stroke = []
 let undo_stack = []
 let redo_stack = []
+// Tracks a redo from a state that still had undo history.
+let redo_used_with_undo_history = false
+const cellStateMap = new WeakMap()
 
-let recent_colors = []
-
-
-
-
-let horizontal_line = false
-let vertical_line = false
-let rDiagonal = false
-let lDiagonal = false
-
+// Rendering settings for the grid.
 let line = "1px"
 let draw = true
 let grid = true
 let erase= false
 let hold = false
 
+// Transparent is treated as a valid empty color, so erasing uses this value.
 let empty_color = 'transparent'
 
 let col1 ="#FFFFFF"
@@ -126,19 +112,47 @@ color9.addEventListener('click', function () {
 
 
 window.addEventListener("mousedown",function(){
-    hold= true
+    hold = true
 })
 
 window.addEventListener("mouseup",function(){
-    hold=false
+    hold = false
+    if(current_stroke.length > 0){
+        // Start a fresh history after redo; otherwise keep undo history and discard redo.
+        if(redo_used_with_undo_history){
+            undo_stack = []
+            redo_stack = []
+        }else{
+            redo_stack = []
+        }
+        undo_stack.push(current_stroke)
+        current_stroke = []
+        redo_used_with_undo_history = false
+    }
 })
 
 
+// Applies either a pen color or transparent eraser color to one grid cell.
+// It also stores the cell's previous color so an undo can restore it later.
+function paintCell(cell){
+    if(!cell) return
 
-let transparent = false
-let on_color 
-let name_class
+    const prevColor = cellStateMap.get(cell) || 'transparent'
+    const newColor = draw ? pen_color.value : empty_color
 
+    if(prevColor === newColor) return
+
+    cell.style.backgroundColor = newColor
+    cellStateMap.set(cell, newColor)
+    current_stroke.push({
+        element: cell,
+        oldColor: prevColor,
+        newColor: newColor
+    })
+}
+
+// Creates the grid of div elements. Each div represents one pixel cell.
+// Every time a user drags over cells, each changed cell is added to current_stroke.
 function increaseGrid(size){ //grid size and pen drawing
     if(size>128){
         window.alert("Size only up to 128x128!")
@@ -154,114 +168,17 @@ function increaseGrid(size){ //grid size and pen drawing
 
             div.id = i //row id name
             div.classList.add(j) //col class name
-
-            console.log(div)
-        
-            
-            
+            cellStateMap.set(div, 'transparent')
 
             div.onmousedown = function(){
-                if(hold) return //if hold is on 
-                if(draw){
-                    transparent =false
-                    redo_clear = true
-                    let curr_color = pen_color.value
-                    div.style.backgroundColor = curr_color
-
-                    undo_count++;
-                   
-                    undo_stack.push(div)
-
-
-            
-                    //  $("div#" + x1 + "." + y1).prevUntil($("div#" + x2 + "." + y2)).css("background-color", curr_color).each(function(){
-                    //         undo_stack.push(this)
-                    //     })
-                    //     $("div#" + x3 + "." + y3).prevUntil($("div#" + x4 + "." + y4)).css("background-color", curr_color).each(function(){
-                    //         undo_stack.push(this)
-                    //     })
-                    
-             
-                   
-                    
+                hold = true
+                current_stroke = []
+                paintCell(this)
             }
-
-                if(erase){
-                    transparent =true
-                    div.style.backgroundColor = empty_color
-                    undo_stack.push(div)
-                    on_color = pen_color.value
-      
-                }
-
-                
-            }
-
-          
 
             div.onmousemove = function(){
-                if(!hold) return //if hold is off
-                if(draw){
-                    undo_count++
-                    transparent =false
-                    redo_clear = true
-                    curr_color = pen_color.value
-                    div.style.backgroundColor = curr_color
-                    undo_stack.push(div)
- 
-
-
-
-
-                    // if(horizontal_line==true){
-                    //     // straight line (horizontal)
-                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                    //         j+=1
-                    //         undo_stack.push(this)
-                    //     })
-                    // }
-
-
-                    // if(rDiagonal ==true){
-                    //          // diagonal(right /)
-                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                    //         j--
-                    //         i++
-                    //         undo_stack.push(this)
-
-                    //     })
-                    // }
-                    // if(lDiagonal==true){
-                    //        //diagonal(left\)
-                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                    //         j++
-                    //         i++
-                    //         undo_stack.push(this)
-
-                    //     })
-                    // }
-
-                    // if(vertical_line==true){ 
-                    // // straight line (vertical)
-                    //     $("div#" + i + "." + j).css("background-color", curr_color).each(function(){
-                    //             i+=1
-                    //             undo_stack.push(this)
-                    //     })
-                    // }
-
-                }
-               
-
-
-                  if(erase){
-                    transparent =true
-                    div.style.backgroundColor = empty_color
-                    undo_stack.push(div)
-                    on_color = pen_color.value
-
-
-                }
-
+                if(!hold) return
+                paintCell(this)
             }
 
             
@@ -291,14 +208,17 @@ function showGrid(){
 }
 
 
+// Clears the canvas and resets the history stacks.
 function reset(){
     container.innerHTML =""
-    increaseGrid(size)
-    while(redo_stack.length>0 || undo_stack.length>0 || recent_colors.length>0){
+    current_stroke = []
+    // A full canvas reset also cancels any pending history reset.
+    redo_used_with_undo_history = false
+    while(redo_stack.length>0 || undo_stack.length>0){
         redo_stack.pop()
         undo_stack.pop()
-        recent_colors.pop()
     }
+    increaseGrid(size)
 }
 
 bkgdIn.addEventListener("change",function(){
@@ -315,13 +235,6 @@ sizeIn.addEventListener('change',function(){
     size = sizeIn.value
     reset()
 })
-
-
-// brushSizeIn.addEventListener('change',function(){
-//     brush = brushSizeIn.value
-//     console.log(brush)
-// })
-
 
 
 emp1.addEventListener('click',function(){
@@ -385,12 +298,14 @@ bkgd_toggle.addEventListener('click',function(){
 increaseGrid(size)
 
 
+// Keyboard shortcuts:
+// - e switches between pencil and eraser modes.
+// - 1-9 choose a palette color.
+// - z undoes the last completed stroke.
+// - r redoes the last undone stroke.
 window.addEventListener("keydown",function(event){
     if(event.key=="e"){
-        rDiagonal=false
-        lDiagonal=false
-        horizontal_line=false
-        vertical_line=false
+       
         if(erase==false){
             container.style.setProperty('--cursor',"url('Eraser.cur'),default")
             draw= false
@@ -404,70 +319,7 @@ window.addEventListener("keydown",function(event){
     }
 
 
-    
-     if(event.key=="h"){ 
-        erase=false
-        draw =true
-        rDiagonal=false
-        vertical_line=false
-        lDiagonal=false
-       if(horizontal_line==false){
-        container.style.setProperty('--cursor',"url('horizontal.cur'),default")
-
-        horizontal_line = true
-       }else{
-        horizontal_line=false
-       }
-    }
-
-     if(event.key=="v"){ 
-        erase=false
-        draw =true
-        horizontal_line=false
-        rDiagonal=false
-        lDiagonal=false
-       if(vertical_line==false){
-        container.style.setProperty('--cursor',"url('vertical.cur'),default")
-
-        vertical_line = true
-       }else{
-        vertical_line=false
-       }
-    }
-
-
-    
-     if(event.key=="m"){ 
-        erase=false
-        draw =true
-        vertical_line=false
-        lDiagonal=false
-        horizontal_line=false
-       if(rDiagonal==false){        
-        container.style.setProperty('--cursor',"url('Diagonal2.cur'),default")
-
-        rDiagonal = true
-       }else{
-        rDiagonal=false
-       }
-    }
-
-     if(event.key=="n"){ 
-        erase=false
-        draw =true        
-        vertical_line=false
-        horizontal_line=false
-        rDiagonal=false
-       if(lDiagonal==false){        
-        container.style.setProperty('--cursor',"url('Diagonal1.cur'),default")
-
-
-        lDiagonal = true
-       }else{
-        lDiagonal=false
-       }
-    }
-
+   
     if(event.key=="1"){
         pen_color.value = col1
 
@@ -505,51 +357,30 @@ window.addEventListener("keydown",function(event){
     }
 
     
-    let curr_color
+    if(event.key=="z" && undo_stack.length>0){
+        const stroke = undo_stack.pop()
+        redo_stack.push(stroke)
 
-  //undo
-
-     if(event.key=="z" && undo_stack.length>0){
-         
-            while(redo_clear == true && redo_stack.length>0){
-                undo_count=0
-                redo_stack.pop()   
-            }
-           redo_clear= false
-            
-            curr_color = window.getComputedStyle(undo_stack[undo_stack.length-1]).getPropertyValue('background-color')
-            // console.log(curr_color)
-            if(transparent!=true){ 
-                for(let i=0;i<drag_count;i++){
-                    recent_colors.push(curr_color)
-                    undo_stack[undo_stack.length-1].style.backgroundColor = empty_color //undo color
-                    redo_stack.push(undo_stack.pop())
-                }
-            }else{
-                recent_colors.push(empty_color)
-                undo_stack[undo_stack.length-1].style.backgroundColor = on_color 
-                redo_stack.push(undo_stack.pop())
-                redo_count++
-            }
-            
-       
-        
+        stroke.forEach(change => {
+            change.element.style.backgroundColor = change.oldColor === 'transparent' ? 'transparent' : change.oldColor
+            cellStateMap.set(change.element, change.oldColor)
+        })
     }
 
-    //redo
+    if(event.key=="r" && redo_stack.length>0){
+        // Only arm the fresh-history behavior when undo history also exists.
+        if(undo_stack.length > 0){
+            redo_used_with_undo_history = true
+        }
 
-    if(event.key=="r" && redo_stack.length>0){ 
-       
-        
-            while(redo_clear == true && redo_stack.length>0){
-                    redo_stack.pop()   
-            }
-           redo_clear= false
+        const stroke = redo_stack.pop()
 
-            redo_stack[redo_stack.length-1].style.setProperty('background-color',recent_colors[recent_colors.length-1])
-            undo_stack.push(redo_stack.pop())
-            recent_colors.pop()
+        stroke.forEach(change => {
+            change.element.style.backgroundColor = change.newColor
+            cellStateMap.set(change.element, change.newColor)
+        })
 
+        undo_stack.push(stroke)
     }
 
 

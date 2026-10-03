@@ -1,29 +1,38 @@
 
-
 body{
     background:linear-gradient(black, rgb(88, 86, 86));
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    padding:10px;
+    margin: 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
-
 
 h1,h2{
     color:rgb(255, 255, 255);
-    font-family:sans-serif;
+    font-family: 'Silkscreen', monospace;;
+    font-size: 30px;
+    text-decoration: underline wavy yellow 2px;
 }
- 
-p1{
+
+h2{
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#info{
+    text-align:left;
     color:white;
-    margin-top: 5px;
     font-family: sans-serif;
 }
 
-p2{
-    color: white;
-    font-style: italic;
+p1, p2{
+    color:white;
+    font-family: sans-serif;
 }
+
 .navigation,.container{
+    display:flex;
     background-color: rgb(0, 0, 0);
     width: 600px;
 }
@@ -35,6 +44,19 @@ p2{
     gap: 5px;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+@media (max-width: 640px){
+    .navigation{
+        width:calc(100vw - 120px);
+        box-sizing:border-box;
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    #container{
+        width:min(600px, calc(100vw - 222px));
+    }
 }
 
 #size-title{
@@ -50,10 +72,15 @@ p2{
     border-color: rgb(255, 255, 255);
 }
 
-
-.brush-size{
-    width:35px;
+.workspace{
+    display:flex;
+    flex-direction:row;
+    align-items:flex-start;
+    gap:12px;
+    /* Offset the palette's extra width so the grid centers under the header. */
+    transform:translateX(51px);
 }
+
 .container{
     --cursor: url("Pencil.cur"),default;
     --size: 16;
@@ -66,9 +93,7 @@ p2{
     grid-template-columns:repeat(var(--size),1fr);
     grid-template-rows:repeat(var(--size),1fr);
     gap: var(--line);
-    padding:3px;
-    float:left;
-
+    width:min(600px, calc(100vw - 120px));
 }
 #pixel-div{
     --width: 1px;
@@ -94,7 +119,6 @@ p2{
 
 #panel{
     display: block;
-    float:left;
     gap:5px;
 }
 
@@ -105,20 +129,14 @@ p2{
 }
 
 #empty{
+    display:inherit;
     float:left;
-   display: block;
+    display: block;
     width: 20px;
     height: 20.4px;
 }
 
-#bottom-buttons{
-    height:20px;
-    margin-top:300px;
-}
 
-.save{
-    margin-left: 315px;
-}
 .col1{
     --color: #FFFFFF;
     background-color: var(--color);
@@ -158,7 +176,6 @@ p2{
     background-color: var(--color);
 }
 
-#showcase{
-    display:grid;
-    grid-template-columns:repeat(4,2fr);
+footer{
+    height: 50px;
 }
